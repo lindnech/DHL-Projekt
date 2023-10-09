@@ -1,0 +1,19 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Die Zeile * text=auto in einer .gitattributes-Datei ist eine Anweisung für Git, 
+# die automatische Erkennung von Textdateien und die Normalisierung von Zeilenumbrüchen (Line Feed, LF) durchzuführen.
+
+# * ist ein Platzhalter, der für alle Dateien steht.
+# text=auto weist Git an, den Inhalt der Datei zu überprüfen und 
+# zu entscheiden, ob es sich um eine Text- oder Binärdatei handelt.
+# Wenn Git eine Datei als Textdatei erkennt, wird es versuchen, 
+# die Zeilenumbrüche zu normalisieren. Das bedeutet:
+
+# Beim Hinzufügen einer Datei zum Repository konvertiert Git Zeilenumbrüche in LF.
+# Beim Auschecken einer Datei aus dem Repository konvertiert Git LF in CRLF 
+# auf Windows-Systemen und behält LF auf Unix-basierten Systemen bei.
+# Diese Einstellung hilft dabei, Konsistenz bei den Zeilenumbrüchen über 
+# verschiedene Betriebssysteme hinweg zu gewährleisten und verhindert Probleme, 
+# die durch unterschiedliche Zeilenumbruchstile verursacht werden können. 
+# Es ist besonders nützlich in Projekten, an denen Entwickler mit verschiedenen Betriebssystemen arbeiten.
