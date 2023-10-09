@@ -1,4 +1,4 @@
-# DHL Kochbuch von Max aufgabe 3
+# DHL Anleitung vom Teacher, Aufgabe 3:
 
 1. SQS erstellen 
 
