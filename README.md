@@ -1,5 +1,5 @@
 # DHL Projekt
- building a infrastructure with Terraform and AWS
+ **building a infrastructure with Terraform and AWS**
 
 Das Projekt, ist eine AWS-basierte Anwendung, die AWS Lambda und DynamoDB verwendet, um Paketinformationen zu verarbeiten. Hier ist eine kurze Zusammenfassung dessen, was jedes Element im Projekt macht:
 
