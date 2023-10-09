@@ -10,7 +10,8 @@ https://www.youtube.com/watch?v=M0GJzjsw5So
 Docs:
 https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.Lambda.Tutorial2.html
 
-*Ab Zeile 42 Filter Beispiel:*
+**Ab Zeile 42 Filter Beispiel:**
+
 https://github.com/terraform-aws-modules/terraform-aws-lambda/blob/master/examples/event-source-mapping/main.tf
 ---
 ### Info
