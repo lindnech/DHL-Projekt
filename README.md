@@ -1,6 +1,9 @@
 # DHL Projekt
  **building a infrastructure with Terraform and AWS**
 
+ <p style="color:red; font-weight:bold">Work in Progress</p>
+
+
 Das Projekt, ist eine AWS-basierte Anwendung, die AWS Lambda und DynamoDB verwendet, um Paketinformationen zu verarbeiten. Hier ist eine kurze Zusammenfassung dessen, was jedes Element im Projekt macht:
 
 1.  main.tf: Diese Datei ist eine Terraform-Konfigurationsdatei, die verwendet wird, um AWS-Ressourcen zu erstellen und zu verwalten. Sie definiert zwei AWS Lambda-Funktionen (get_driver und orderput), eine IAM-Rolle und -Richtlinie für die Lambda-Funktionen und eine DynamoDB-Tabelle namens Orders. Die Lambda-Funktionen verwenden Python 3.9 als Laufzeitumgebung.
