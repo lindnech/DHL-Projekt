@@ -17,7 +17,7 @@ resource "aws_lambda_event_source_mapping" "dynamodb_event_source" {
   event_source_arn = aws_dynamodb_table.OrderDB.stream_arn  # Die ARN des DynamoDB-Streams, der als Ereignisquelle dient
   function_name = aws_lambda_function.get_driver.arn  # Die ARN der Lambda-Funktion, die aufgerufen wird, wenn ein Ereignis eintritt
   starting_position          = "LATEST"  # Der Punkt im Stream, an dem die Funktion zu lesen beginnt
-}
+
   # Set batch_size to 1 to process each event individually
   batch_size = 1
 
@@ -142,4 +142,10 @@ data "archive_file" "lambda1_code" {
   type        = "zip"
   source_file = "./python/orderlambda.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./python/orderlambda.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
+}
+
+data "archive_file" "lambda2_code" {
+  type        = "zip"
+  source_file = "./getdriver/index.py"  # Pfad zum ZIP-Datei-Quelldatei
+  output_path = "./getdriver/index.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
