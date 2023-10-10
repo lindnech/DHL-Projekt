@@ -51,27 +51,6 @@ def lambda_handler(event, context):
         table.put_item(Item=item)  
 
 
-        # Send a message to the SQS queue
-        sqs_message = {
-            "packageID": item["packageID"],  # You can customize this message as needed
-            "message": "New package inserted into DynamoDB"
-        }
-        
-        sqs.set_queue_attributes(
-    QueueUrl=sqs_queue_url,
-    Attributes={
-        'ContentBasedDeduplication': 'true'
-    }
-    )
-
-
-        sqs_response = sqs.send_message(
-            QueueUrl=sqs_queue_url,
-            MessageBody=json.dumps(sqs_message),
-            MessageGroupId=generate_packageID()
-        )
-
-
         return {
             'statusCode': 200,
             'body': f'Successfully inserted item with packageID {item["packageID"]}'  
