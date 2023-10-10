@@ -1,0 +1,18 @@
+# Ignore .terraform directories
+**/.terraform/
+
+# Ignore .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Ignore crash.log files
+crash.log
+
+# Ignore .tfvars files
+*.tfvars
+
+# Ignore .tfplan files
+*.tfplan
+
+# Ignore drawio
+DHL.drawio
