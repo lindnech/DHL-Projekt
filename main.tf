@@ -136,7 +136,7 @@ resource "aws_dynamodb_table" "OrderDB" {
 #   receive_wait_time_seconds = 10
 # }
 
-############################## zip ##############################
+######################### auto zip ##############################
 
 data "archive_file" "lambda1_code" {
   type        = "zip"
@@ -148,4 +148,10 @@ data "archive_file" "lambda2_code" {
   type        = "zip"
   source_file = "./getdriver/index.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./getdriver/index.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
+}
+
+data "archive_file" "lambda3_code" {
+  type        = "zip"
+  source_file = "./driver/driver.py"  # Pfad zum ZIP-Datei-Quelldatei
+  output_path = "./driver/driver.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
