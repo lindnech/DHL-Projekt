@@ -2,23 +2,39 @@ provider "aws" {
   region = "eu-central-1"  # Setzt die AWS-Region auf "eu-central-1"
 }
 
-# ############################# Lambda ##################################
+############################# Lambda ##################################
 
-# resource "aws_lambda_function" "get_driver" {
-#   function_name = "getdriverlambda"  # Der Name der Lambda-Funktion
-#   role          = aws_iam_role.lambda_exec_role.arn  # Die IAM-Rolle, die der Funktion zugewiesen wird
-#   handler       = "index.lambda_handler"  # Der Handler, der aufgerufen wird, wenn die Funktion ausgeführt wird
-#   runtime       = "python3.9"  # Die Laufzeitumgebung für die Funktion
+resource "aws_lambda_function" "get_driver" {
+  function_name = "getdriverlambda"  # Der Name der Lambda-Funktion
+  role          = aws_iam_role.lambda_exec_role.arn  # Die IAM-Rolle, die der Funktion zugewiesen wird
+  handler       = "index.lambda_handler"  # Der Handler, der aufgerufen wird, wenn die Funktion ausgeführt wird
+  runtime       = "python3.9"  # Die Laufzeitumgebung für die Funktion
 
-#   filename = "./getdriver/index.zip"  # Der Pfad zur ZIP-Datei, die den Code der Funktion enthält
-# }
+  filename = "./getdriver/index.zip"  # Der Pfad zur ZIP-Datei, die den Code der Funktion enthält
+}
 
-# resource "aws_lambda_event_source_mapping" "dynamodb_event_source" {
-#   event_source_arn = aws_dynamodb_table.OrderDB.stream_arn  # Die ARN des DynamoDB-Streams, der als Ereignisquelle dient
-#   function_name = aws_lambda_function.get_driver.arn  # Die ARN der Lambda-Funktion, die aufgerufen wird, wenn ein Ereignis eintritt
-#   starting_position          = "LATEST"  # Der Punkt im Stream, an dem die Funktion zu lesen beginnt
-# }
-# +-
+resource "aws_lambda_event_source_mapping" "dynamodb_event_source" {
+  event_source_arn = aws_dynamodb_table.OrderDB.stream_arn  # Die ARN des DynamoDB-Streams, der als Ereignisquelle dient
+  function_name = aws_lambda_function.get_driver.arn  # Die ARN der Lambda-Funktion, die aufgerufen wird, wenn ein Ereignis eintritt
+  starting_position          = "LATEST"  # Der Punkt im Stream, an dem die Funktion zu lesen beginnt
+}
+  # Set batch_size to 1 to process each event individually
+  batch_size = 1
+
+  filter_criteria {
+    filter {
+      
+      pattern = jsonencode({
+        eventName :["INSERT"]
+        # body = {
+        # }
+      })
+    }
+  }
+}
+
+
+
 resource "aws_lambda_function" "orderput" {
   function_name = "orderlambda"  # Der Name der Lambda-Funktion
   role          = aws_iam_role.lambda_exec_role.arn  # Die IAM-Rolle, die der Funktion zugewiesen wird
