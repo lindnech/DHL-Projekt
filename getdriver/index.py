@@ -18,12 +18,13 @@ import json  # Importiert das json-Modul, das Methoden zum Parsen von JSON-Strin
 
 ## Variante 2 von Aufgabe2:
 
-def lambda_handler(event, context):
-    for record in event['Records']:
-        if record['eventName'] == 'INSERT':
-            print("Neuer Eintrag hinzugefügt:", record['dynamodb']['NewImage'])
-    return {"statusCode": 200, "body": "Verarbeitete Datensätze"}
+def lambda_handler(event, context):  # Definiert eine Funktion namens "lambda_handler" mit zwei Parametern: "event" und "context".
+    for record in event['Records']:  # Durchläuft alle Datensätze im 'Records'-Feld des 'event'-Parameters.
+        if record['eventName'] == 'INSERT':  # Überprüft, ob das 'eventName'-Feld des aktuellen Datensatzes 'INSERT' ist.
+            print("Neuer Eintrag hinzugefügt:", record['dynamodb']['NewImage'])  # Wenn ja, druckt es die Zeichenkette "Neuer Eintrag hinzugefügt:" und den Inhalt des 'NewImage'-Feldes des 'dynamodb'-Feldes des aktuellen Datensatzes.
+    return {"statusCode": 200, "body": "Verarbeitete Datensätze"}  # Gibt ein Wörterbuch zurück, das einen HTTP-Statuscode und eine Nachricht enthält. Dies ist typisch für AWS Lambda-Funktionen, die als HTTP-Handler fungieren.
+
 
 # In diesem Code wird die Lambda-Funktion nur dann eine Aktion ausführen 
 # (in diesem Fall das Drucken der neuen Elementdaten), wenn ein neues Element 
-# in die DynamoDB-Tabelle eingefügt wurde. 
+# in die DynamoDB-Tabelle eingefügt wurde.
