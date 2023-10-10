@@ -120,3 +120,10 @@ resource "aws_dynamodb_table" "OrderDB" {
 #   receive_wait_time_seconds = 10
 # }
 
+############################## zip ##############################
+
+data "archive_file" "lambda1_code" {
+  type        = "zip"
+  source_file = "./python/orderlambda.py"  # Pfad zum ZIP-Datei-Quelldatei
+  output_path = "./python/orderlambda.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
+}
