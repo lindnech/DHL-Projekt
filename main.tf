@@ -126,15 +126,50 @@ resource "aws_dynamodb_table" "OrderDB" {
 # # Die DynamoDB-Tabelle ist so konfiguriert, dass sie einen Stream von Änderungen an den 
 # # Tabellendaten bereitstellt, auf die die Lambda-Funktionen reagieren können. Der Primärschlüssel der Tabelle ist packageID.
 
-# ############################ SQS ############################
+############################ SQS ############################
 
-# resource "aws_sqs_queue" "DHL-SQS-queue" {
-#   name = "DHL-SQS-queue"
-#   delay_seconds = 90
-#   max_message_size = 2048
-#   message_retention_seconds = 86400
-#   receive_wait_time_seconds = 10
-# }
+# Erstellen einer AWS SQS-Warteschlange
+resource "aws_sqs_queue" "order_queue" {
+  name                      = "order-queue"  # Name der Warteschlange
+  delay_seconds             = 0  # Verzögerungszeit für Nachrichten, die an die Warteschlange gesendet werden (in Sekunden)
+  max_message_size          = 2048  # Maximale Größe einer Nachricht in der Warteschlange (in Bytes)
+  message_retention_seconds = 86400  # Zeit, die eine Nachricht in der Warteschlange behalten wird, wenn sie nicht gelöscht wird (in Sekunden)
+  visibility_timeout_seconds = 30  # Zeit, die eine Nachricht aus der Warteschlange unsichtbar ist, nachdem ein Empfänger eine Nachricht empfangen hat (in Sekunden)
+  fifo_queue                = false # Ändern Sie auf true für FIFO-Warteschlange
+}
+
+# Ausgabe der URL der SQS-Warteschlange
+output "sqs_queue_url" {
+  value = aws_sqs_queue.order_queue.id  # Wert der URL der SQS-Warteschlange
+}
+
+# Dieser Terraform-Code erstellt eine Amazon Simple Queue Service (SQS) Warteschlange namens “order-queue”. Die Warteschlange hat keine Verzögerung 
+# für eingehende Nachrichten, eine maximale Nachrichtengröße von 2048 Bytes, behält Nachrichten für bis zu 86400 Sekunden (1 Tag) und macht eine Nachricht 
+# für 30 Sekunden unsichtbar, nachdem ein Empfänger sie empfangen hat. Die Warteschlange ist keine FIFO-Warteschlange. Am Ende gibt der Code die URL der erstellten 
+# Warteschlange aus.
+
+###########################SNS##################################
+
+# Erstellen eines AWS SNS-Themas
+resource "aws_sns_topic" "example" {
+  name = "example-topic"  # Name des SNS-Themas
+}
+
+# Erstellen eines Abonnements für das SNS-Thema
+resource "aws_sns_topic_subscription" "email_subscription" {
+  topic_arn = aws_sns_topic.example.arn  # ARN des SNS-Themas
+  protocol  = "email"  # Protokoll für das Abonnement (in diesem Fall E-Mail)
+  endpoint  = "thomas.kirsch@docc.techstarter.de"  # Endpunkt für das Abonnement (in diesem Fall eine E-Mail-Adresse)
+}
+
+# Ausgabe der ARN des SNS-Themas
+output "sns_topic_arn" {
+  value = aws_sns_topic.example.arn  # Wert der ARN des SNS-Themas
+}
+
+# Dieser Terraform-Code erstellt ein Amazon Simple Notification Service (SNS) Thema und ein E-Mail-Abonnement für dieses Thema. 
+# Das Thema heißt “example-topic”. Das Abonnement sendet Benachrichtigungen an die E-Mail-Adresse “emailadresse einfügen”. 
+# Am Ende gibt der Code die Amazon Resource Number (ARN) des erstellten Themas aus.
 
 ######################### auto zip ##############################
 
@@ -154,4 +189,16 @@ data "archive_file" "lambda3_code" {
   type        = "zip"
   source_file = "./driver/driver.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./driver/driver.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
+}
+
+data "archive_file" "lambda4_code" {
+  type        = "zip"
+  source_file = "./python/request.py"  # Pfad zum ZIP-Datei-Quelldatei
+  output_path = "./python/request.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
+}
+
+data "archive_file" "lambda5_code" {
+  type        = "zip"
+  source_file = "./python/sns.py"  # Pfad zum ZIP-Datei-Quelldatei
+  output_path = "./python/sns.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
