@@ -321,7 +321,7 @@ variable "email_address" {
 resource "aws_sns_topic_subscription" "email_subscription" { # Dies definiert eine Ressource vom Typ aws_sns_topic_subscription mit dem Namen email_subscription.
   topic_arn = aws_sns_topic.example.arn  # ARN des SNS-Themas
   protocol  = "email"  # Protokoll für das Abonnement (in diesem Fall E-Mail)
-  endpoint  = "var.email_address"  # Endpunkt für das Abonnement (in diesem Fall eine E-Mail-Adresse)
+  endpoint  = "${var.email_address}"  # Endpunkt für das Abonnement (in diesem Fall eine E-Mail-Adresse)
 }
 
 # Ausgabe der ARN des SNS-Themas
