@@ -282,12 +282,12 @@ resource "aws_dynamodb_table" "DriverDB" { # Dies definiert eine Ressource vom T
 
 # Erstellen einer AWS SQS-Warteschlange
 resource "aws_sqs_queue" "order_queue" {
-  name                      = "order-queue"  # Name der Warteschlange
+  name                      = "order-queue.fifo"  # Name der Warteschlange
   delay_seconds             = 0  # Verzögerungszeit für Nachrichten, die an die Warteschlange gesendet werden (in Sekunden)
   max_message_size          = 2048  # Maximale Größe einer Nachricht in der Warteschlange (in Bytes)
   message_retention_seconds = 86400  # Zeit, die eine Nachricht in der Warteschlange behalten wird, wenn sie nicht gelöscht wird (in Sekunden)
   visibility_timeout_seconds = 30  # Zeit, die eine Nachricht aus der Warteschlange unsichtbar ist, nachdem ein Empfänger eine Nachricht empfangen hat (in Sekunden)
-  fifo_queue                = false # Ändern Sie auf true für FIFO-Warteschlange
+  fifo_queue                = true # Ändern Sie auf true für FIFO-Warteschlange
 }
 
 # Ausgabe der URL der SQS-Warteschlange
