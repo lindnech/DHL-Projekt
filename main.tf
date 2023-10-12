@@ -95,6 +95,10 @@ resource "aws_lambda_event_source_mapping" "dynamodb_event_source" { # Definiert
 # Der Code für die Funktion befindet sich in einer ZIP-Datei im Verzeichnis ./getdriver/. 
 # Jedes Event wird einzeln verarbeitet (batch_size = 1).
 
+#######################
+
+
+# Definiert eine AWS Lambda-Funktion namens "orderlambda"
 resource "aws_lambda_function" "orderput" {
   function_name = "orderlambda"  # Der Name der Lambda-Funktion
   role          = aws_iam_role.lambda_exec_role.arn  # Die IAM-Rolle, die der Funktion zugewiesen wird
@@ -103,59 +107,130 @@ resource "aws_lambda_function" "orderput" {
 
   filename = "./python/orderlambda.zip"  # Der Pfad zur ZIP-Datei, die den Code der Funktion enthält
 
+# Umgebungsvariablen für die Lambda-Funktion
   environment {
     variables = {
+      # Der Name der DynamoDB-Tabelle, die als Umgebungsvariable
       DYNAMODB_TABLE = aws_dynamodb_table.OrderDB.name  # Eine Umgebungsvariable, die den Namen der DynamoDB-Tabelle enthält
     }
   }
 }
 
-resource "aws_iam_role" "lambda_exec_role" {
-  name = "lambda-exec-role"  # Der Name der IAM-Rolle
+# Definiert eine AWS Lambda-Funktion namens "createdriver"
+resource "aws_lambda_function" "driverput" {
+  # Der Name der Lambda-Funktion
+  function_name = "createdriver"
+  # Die IAM-Rolle, die der Lambda-Funktion zugewiesen wird
+  role          = aws_iam_role.lambda_exec_role.arn
+  # Der Handler für die Lambda-Funktion
+  handler       = "driver.lambda_handler"
+  # Die Laufzeitumgebung für die Lambda-Funktion
+  runtime       = "python3.9"
+  # Der Pfad zur ZIP-Datei, die den Code der Lambda-Funktion enthält
+  filename = "./driver/driver.zip"
+  # Umgebungsvariablen für die Lambda-Funktion
+  environment {
+    variables = {
+      # Der Name der DynamoDB-Tabelle, die als Umgebungsvariable bereitgestellt wird
+      DYNAMODB_TABLE = aws_dynamodb_table.OrderDB.name
+    }
+  }
+}
 
-  assume_role_policy = jsonencode({  
-    Version = "2012-10-17",  # Die Version der Richtlinie
-    Statement = [{  # Eine Liste von Aussagen, die die Richtlinie definieren
-      Action = "sts:AssumeRole",  # Die Aktion, die erlaubt ist
-      Effect = "Allow",  # Die Wirkung der Aussage, in diesem Fall "Allow", was bedeutet, dass die Aktion erlaubt ist
+# Zusammengefasst erstellt dieses Skript zwei AWS Lambda-Funktionen: orderlambda und createdriver. 
+# Beide Funktionen verwenden Python 3.9 als Laufzeit und haben Zugriff auf eine DynamoDB-Tabelle 
+# über eine Umgebungsvariable. Der Code für jede Funktion befindet sich in einer ZIP-Datei in den 
+# jeweiligen Verzeichnissen ./python/ und ./driver/.
+
+#######################
+
+# Erstellt eine IAM-Rolle für AWS Lambda
+resource "aws_iam_role" "lambda_exec_role" {
+  # Der Name der Rolle
+  name = "lambda-exec-role"
+
+  # Die Richtlinie, die festlegt, welche Dienste diese Rolle annehmen können
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
       Principal = {
-        Service = "lambda.amazonaws.com"  # Der Dienst, der die Aktion ausführen darf
+        Service = "lambda.amazonaws.com"
       }
     }]
-  })  
-}
-
-resource "aws_iam_policy_attachment" "lambda_exec_policy" {
-  name       = "Lambda-exec"  # Der Name der Richtlinienanlage
-  policy_arn = aws_iam_policy.lambda_policy.arn  # Die ARN der Richtlinie, die angehängt wird
-  roles      = [aws_iam_role.lambda_exec_role.name]  # Die Rollen, denen die Richtlinie angehängt wird
-}
-
-resource "aws_iam_policy" "lambda_policy" {
-  name   = "lambda-policy"  # Der Name der Richtlinie
-
-  policy = jsonencode({
-    Version = "2012-10-17",  # Die Version der Richtlinie
-    Statement = [{  
-      Action   = ["dynamodb:*"],  # Die Aktionen, die erlaubt sind (in diesem Fall alle Aktionen auf DynamoDB)
-      Effect   = "Allow",  # Die Wirkung der Aussage, in diesem Fall "Allow", was bedeutet, dass die Aktionen erlaubt sind
-      Resource = "*"  # Die Ressourcen, auf die sich die Aussage bezieht (in diesem Fall alle Ressourcen)
-    },
-    {
-    Action   = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ],
-    Effect   = "Allow",
-    Resource = "*"
-    }
-    
-    ]
   })
 }
 
-# ############################ DynamoDB ############################
+# Hängt eine IAM-Richtlinie an die erstellte Rolle an
+resource "aws_iam_policy_attachment" "lambda_exec_policy" {
+  # Der Name der Richtlinienanlage
+  name = "Lambda-exec"
+  
+  # Die ARN der Richtlinie, die angehängt werden soll
+  policy_arn = aws_iam_policy.lambda_policy.arn
+  
+  # Die Rollen, an die die Richtlinie angehängt werden soll
+  roles      = [aws_iam_role.lambda_exec_role.name]
+}
+
+# Erstellt eine IAM-Richtlinie
+resource "aws_iam_policy" "lambda_policy" {
+  # Der Name der Richtlinie
+  name = "lambda-policy"
+
+  # Die Richtliniendetails
+  policy = jsonencode({
+    # Die Version der Richtlinie
+    "Version": "2012-10-17",
+    # Eine Liste von Aussagen in der Richtlinie
+    "Statement": [
+        {
+            # Ein eindeutiger Bezeichner für die Aussage
+            "Sid": "VisualEditor0",
+            # Der Effekt der Aussage, hier erlaubt
+            "Effect": "Allow",
+            # Die Aktionen, die erlaubt sind
+            "Action": [
+                # Erlaubt alle Aktionen auf DynamoDB
+                "dynamodb:*",
+                # Erlaubt alle Aktionen auf SQS
+                "sqs:*",
+                # Erlaubt alle Aktionen auf SNS
+                "sns:*"
+            ],
+            # Die Ressourcen, auf die sich die Aussage bezieht, hier alle Ressourcen
+            "Resource": "*"
+        },
+        {
+            # Ein eindeutiger Bezeichner für die Aussage
+            "Sid": "VisualEditor1",
+            # Der Effekt der Aussage, hier erlaubt
+            "Effect": "Allow",
+            # Die Aktionen, die erlaubt sind
+            "Action": [
+                # Erlaubt das Erstellen von Log-Streams
+                "logs:CreateLogStream",
+                # Erlaubt das Erstellen von Log-Gruppen
+                "logs:CreateLogGroup",
+                # Erlaubt das Hinzufügen von Log-Ereignissen zu einem Log-Stream
+                "logs:PutLogEvents"
+            ],
+            # Die Ressourcen, auf die sich die Aussage bezieht, hier alle Log-Ressourcen
+            "Resource": "arn:aws:logs:::*"
+        }
+    ]
+})
+}
+
+# Dieser Terraform-Code erstellt eine AWS IAM-Rolle und eine IAM-Richtlinie und hängt die Richtlinie 
+# an die Rolle an. Die Rolle wird so konfiguriert, dass sie von AWS Lambda-Diensten angenommen werden kann. 
+# Die Richtlinie gibt den Lambda-Diensten Berechtigungen für verschiedene Aktionen, 
+# einschließlich der Interaktion mit DynamoDB, SQS und SNS sowie der Erstellung und Aktualisierung 
+# von Log-Streams und -Gruppen. Diese Konfiguration ist nützlich für die Bereitstellung von serverlosen 
+# Anwendungen auf AWS mit Terraform.
+
+############################ DynamoDB ############################
 # 1.Table
 resource "aws_dynamodb_table" "OrderDB" {
   name           = "Orders"  # Der Name der Tabelle
