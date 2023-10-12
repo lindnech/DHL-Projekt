@@ -1,4 +1,4 @@
-provider "aws" { # Definiert einen Provider vom Typ "aws"
+provider "aws" { 
   region = "eu-central-1"  # Setzt die AWS-Region auf "eu-central-1"
 }
 
@@ -310,11 +310,18 @@ resource "aws_sns_topic" "example" { # Dies definiert eine Ressource vom Typ aws
   name = "example-topic"  # Legt den Namen des SNS-Themas auf example-topic fest.
 }
 
+# Eine Variable erstellen die eine Email adresse einfügt die nicht öffentlich sichtbar ist.
+variable "email_address" {
+  description = "Die E-Mail-Adresse, die verwendet werden soll"
+  type = string
+}
+
+
 # Erstellen eines Abonnements für das SNS-Thema
 resource "aws_sns_topic_subscription" "email_subscription" { # Dies definiert eine Ressource vom Typ aws_sns_topic_subscription mit dem Namen email_subscription.
   topic_arn = aws_sns_topic.example.arn  # ARN des SNS-Themas
   protocol  = "email"  # Protokoll für das Abonnement (in diesem Fall E-Mail)
-  endpoint  = "<emailadresse eingeben>"  # Endpunkt für das Abonnement (in diesem Fall eine E-Mail-Adresse)
+  endpoint  = "var.email_address"  # Endpunkt für das Abonnement (in diesem Fall eine E-Mail-Adresse)
 }
 
 # Ausgabe der ARN des SNS-Themas
