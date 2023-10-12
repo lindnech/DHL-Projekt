@@ -1,3 +1,4 @@
+import os  # Importiert das os-Modul, das Funktionen für die Interaktion mit dem Betriebssystem bereitstellt.
 import boto3  # Importiert das boto3-Modul, das eine Python-Schnittstelle zu Amazon Web Services bietet.
 import uuid  # Importiert das uuid-Modul, das Funktionen zur Erzeugung von eindeutigen Identifikatoren bereitstellt.
 
@@ -6,6 +7,7 @@ dynamodb = boto3.client('dynamodb')  # Erstellt einen Client für den Zugriff au
 def lambda_handler(event, context):  # Definiert eine Funktion namens "lambda_handler" mit zwei Parametern: "event" und "context".
     table_name = "Drivers"  # Definiert den Namen der DynamoDB-Tabelle, in die die Daten eingefügt werden sollen.
     num_drivers = 10  # Definiert die Anzahl der Fahrerdatensätze, die erstellt werden sollen.
+    email = os.environ.get('EMAIL')  # Ruft den Wert der Umgebungsvariable 'EMAIL' ab und speichert ihn in der Variable 'email'.
 
     for i in range(1, num_drivers + 1):  # Startet eine Schleife, die für jede Zahl von 1 bis num_drivers (einschließlich) ausgeführt wird.
         driver_id = str(uuid.uuid4())  # Erzeugt eine eindeutige ID für den Fahrer mit der Funktion uuid.uuid4 und konvertiert sie in einen String.
@@ -16,7 +18,7 @@ def lambda_handler(event, context):  # Definiert eine Funktion namens "lambda_ha
             "driverID": {"S": driver_id},  # Fügt die Fahrer-ID als String hinzu.
             "Name": {"S": driver_name},  # Fügt den Fahrernamen als String hinzu.
             "Verfügbarkeit": {"S": availability},  # Fügt die Verfügbarkeit als String hinzu.
-            "Email": {"S": "emailadresse"}  # Fügt eine Dummy-E-Mail-Adresse als String hinzu.
+            "Email": {"S": email}  # Verwendet die 'email'-Variable anstelle eines fest codierten Strings.
         }
 
         try:  # Startet einen Try-Block, um Fehler beim Einfügen des Datensatzes in die DynamoDB-Tabelle abzufangen.
@@ -35,7 +37,7 @@ def lambda_handler(event, context):  # Definiert eine Funktion namens "lambda_ha
 
 # Dieser Code erstellt eine AWS Lambda-Funktion, die Dummy-Datensätze für Fahrer in einer Amazon DynamoDB-Tabelle erstellt. 
 # Für jeden Datensatz wird eine eindeutige ID erzeugt und zusammen mit einem generierten Namen, einer festen Verfügbarkeit
-#  und einer Dummy-E-Mail-Adresse in die Tabelle eingefügt. Wenn alle Datensätze erfolgreich eingefügt wurden, 
+# und einer Dummy-E-Mail-Adresse in die Tabelle eingefügt. Wenn alle Datensätze erfolgreich eingefügt wurden, 
 # gibt die Funktion eine Erfolgsmeldung zurück. Wenn beim Einfügen eines Datensatzes ein Fehler auftritt, 
 # wird eine Fehlermeldung ausgegeben. Die Anzahl der zu erstellenden Datensätze kann durch Ändern des Werts der 
 # Variable num_drivers angepasst werden. Der Name der DynamoDB-Tabelle kann durch Ändern des Werts der Variable 

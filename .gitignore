@@ -16,3 +16,6 @@ crash.log
 
 # Ignore drawio
 DHL.drawio
+
+# Ignore email variable
+config.py
