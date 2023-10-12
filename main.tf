@@ -1,10 +1,66 @@
-provider "aws" {
+provider "aws" { # Definiert einen Provider vom Typ "aws"
   region = "eu-central-1"  # Setzt die AWS-Region auf "eu-central-1"
 }
 
+# Zusammengefasst konfiguriert dieses Skript Terraform, um AWS-Ressourcen in der Region “eu-central-1” zu verwalten. 
+# Ein Provider in Terraform ist verantwortlich für das Verständnis der API-Interaktionen und die Belichtung von Ressourcen. 
+# Die Provider ermöglichen es Terraform, mit einer Vielzahl von Diensten zu interagieren.
+
 ############################# Lambda ##################################
 
-resource "aws_lambda_function" "get_driver" {
+# Definiert eine AWS Lambda-Funktion namens "request-lambda"
+resource "aws_lambda_function" "request_lambda" {
+  # Der Name der Lambda-Funktion
+  function_name = "request-lambda"
+  # Die IAM-Rolle, die der Lambda-Funktion zugewiesen wird
+  role          = aws_iam_role.lambda_exec_role.arn
+  # Der Handler für die Lambda-Funktion
+  handler       = "request.lambda_handler"
+  # Die Laufzeitumgebung für die Lambda-Funktion
+  runtime       = "python3.9"
+  # Der Pfad zur ZIP-Datei, die den Code der Lambda-Funktion enthält
+  filename = "./python/request.zip"
+  # Umgebungsvariablen für die Lambda-Funktion
+  environment {
+    variables = {
+      # Die URL der SQS-Warteschlange, die als Umgebungsvariable bereitgestellt wird
+      SQS_QUEUE_URL = aws_sqs_queue.order_queue.id
+    }
+  }
+}
+
+# Definiert eine AWS Lambda-Funktion namens "sns-lambda"
+resource "aws_lambda_function" "sns" {
+  # Der Name der Lambda-Funktion
+  function_name = "sns-lambda"
+  # Die IAM-Rolle, die der Lambda-Funktion zugewiesen wird
+  role          = aws_iam_role.lambda_exec_role.arn
+  # Der Handler für die Lambda-Funktion
+  handler       = "sns.lambda_handler"
+  # Die Laufzeitumgebung für die Lambda-Funktion
+  runtime       = "python3.9"
+  # Der Pfad zur ZIP-Datei, die den Code der Lambda-Funktion enthält
+  filename = "./python/sns.zip"
+  # Umgebungsvariablen für die Lambda-Funktion
+  environment {
+    variables = {
+      # Die URL der SQS-Warteschlange, die als Umgebungsvariable bereitgestellt wird
+      SQS_QUEUE_URL = aws_sqs_queue.order_queue.id
+      # Das ARN des SNS-Themas, das als Umgebungsvariable bereitgestellt wird
+      SNS_TOPIC_ARN = aws_sns_topic.example.arn
+    }
+  }
+}
+
+# Zusammengefasst erstellt dieses Skript zwei AWS Lambda-Funktionen: request-lambda und sns-lambda. 
+# Beide Funktionen verwenden Python 3.9 als Laufzeit und haben Zugriff auf eine SQS-Warteschlange 
+# über eine Umgebungsvariable. Zusätzlich hat sns-lambda Zugriff auf ein SNS-Thema über eine Umgebungsvariable. 
+# Der Code für jede Funktion befindet sich in einer ZIP-Datei im Verzeichnis ./python/.
+
+#######################
+
+# Definiert eine AWS Lambda-Funktion namens "getdriverlambda"
+resource "aws_lambda_function" "get_driver" { # Der Name der Lambda-Funktion
   function_name = "getdriverlambda"  # Der Name der Lambda-Funktion
   role          = aws_iam_role.lambda_exec_role.arn  # Die IAM-Rolle, die der Funktion zugewiesen wird
   handler       = "index.lambda_handler"  # Der Handler, der aufgerufen wird, wenn die Funktion ausgeführt wird
@@ -13,17 +69,18 @@ resource "aws_lambda_function" "get_driver" {
   filename = "./getdriver/index.zip"  # Der Pfad zur ZIP-Datei, die den Code der Funktion enthält
 }
 
-resource "aws_lambda_event_source_mapping" "dynamodb_event_source" {
+resource "aws_lambda_event_source_mapping" "dynamodb_event_source" { # Definiert eine AWS Lambda Event Source Mapping-Ressource
   event_source_arn = aws_dynamodb_table.OrderDB.stream_arn  # Die ARN des DynamoDB-Streams, der als Ereignisquelle dient
   function_name = aws_lambda_function.get_driver.arn  # Die ARN der Lambda-Funktion, die aufgerufen wird, wenn ein Ereignis eintritt
   starting_position          = "LATEST"  # Der Punkt im Stream, an dem die Funktion zu lesen beginnt
 
-  # Set batch_size to 1 to process each event individually
+  # Die Anzahl der Events, die gleichzeitig verarbeitet werden sollen
   batch_size = 1
 
+# Filterkriterien für die Events
   filter_criteria {
     filter {
-      
+      # Das Muster für die zu filternden Events, in diesem Fall nur "INSERT"-Events
       pattern = jsonencode({
         eventName :["INSERT"]
         # body = {
@@ -33,7 +90,10 @@ resource "aws_lambda_event_source_mapping" "dynamodb_event_source" {
   }
 }
 
-
+# Zusammengefasst erstellt dieses Skript eine AWS Lambda-Funktion namens getdriverlambda 
+# und konfiguriert sie so, dass sie auf INSERT-Events in einem DynamoDB-Stream reagiert. 
+# Der Code für die Funktion befindet sich in einer ZIP-Datei im Verzeichnis ./getdriver/. 
+# Jedes Event wird einzeln verarbeitet (batch_size = 1).
 
 resource "aws_lambda_function" "orderput" {
   function_name = "orderlambda"  # Der Name der Lambda-Funktion
