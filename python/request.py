@@ -8,7 +8,8 @@ sqs = boto3.client('sqs')
 dynamodb = boto3.client('dynamodb')
 
 # Definieren des Namens der SQS-Warteschlange und der DynamoDB-Tabelle
-sqs_queue_url = 'https://sqs.eu-central-1.amazonaws.com/732509143253/DHL_driver.fifo'
+sqs_queue_url = 'https://sqs.eu-central-1.amazonaws.com/732509143253/DHL_driver.fifo' # !!! Ändern nach erstellung
+
 dynamodb_table_name = 'Drivers'
 
 def assign_package_to_driver(package_id):

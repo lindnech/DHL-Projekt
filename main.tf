@@ -96,7 +96,7 @@ resource "aws_iam_policy" "lambda_policy" {
 }
 
 # ############################ DynamoDB ############################
-
+# 1.Table
 resource "aws_dynamodb_table" "OrderDB" {
   name           = "Orders"  # Der Name der Tabelle
   
@@ -113,18 +113,35 @@ resource "aws_dynamodb_table" "OrderDB" {
  }
 }
 
-# # Dieser Code verwendet Terraform, um AWS-Ressourcen zu erstellen und zu verwalten. 
-# # Es definiert zwei AWS Lambda-Funktionen (getdriverlambda und orderlambda), eine 
-# # DynamoDB-Tabelle (Orders) und eine IAM-Rolle (lambda-exec-role) mit einer zugehörigen Richtlinie (lambda-policy).
+# Dieser Code verwendet Terraform, um AWS-Ressourcen zu erstellen und zu verwalten. 
+# Es definiert zwei AWS Lambda-Funktionen (getdriverlambda und orderlambda), eine 
+# DynamoDB-Tabelle (Orders) und eine IAM-Rolle (lambda-exec-role) mit einer zugehörigen Richtlinie (lambda-policy).
 
-# # Die Lambda-Funktionen sind so konfiguriert, dass sie auf Ereignisse reagieren, 
-# # die von einem DynamoDB-Stream generiert werden (definiert durch das aws_lambda_event_source_mapping-Ressourcenobjekt).
+# Die Lambda-Funktionen sind so konfiguriert, dass sie auf Ereignisse reagieren, 
+# die von einem DynamoDB-Stream generiert werden (definiert durch das aws_lambda_event_source_mapping-Ressourcenobjekt).
 
-# # Die IAM-Rolle und -Richtlinie geben den Lambda-Funktionen die erforderlichen 
-# # Berechtigungen zum Lesen und Schreiben in DynamoDB und zum Erstellen und Schreiben von Loggruppen und -streams.
+# Die IAM-Rolle und -Richtlinie geben den Lambda-Funktionen die erforderlichen 
+# Berechtigungen zum Lesen und Schreiben in DynamoDB und zum Erstellen und Schreiben von Loggruppen und -streams.
 
-# # Die DynamoDB-Tabelle ist so konfiguriert, dass sie einen Stream von Änderungen an den 
-# # Tabellendaten bereitstellt, auf die die Lambda-Funktionen reagieren können. Der Primärschlüssel der Tabelle ist packageID.
+# Die DynamoDB-Tabelle ist so konfiguriert, dass sie einen Stream von Änderungen an den 
+# Tabellendaten bereitstellt, auf die die Lambda-Funktionen reagieren können. Der Primärschlüssel der Tabelle ist packageID.
+
+# 2.Table
+resource "aws_dynamodb_table" "DriverDB" { # Dies definiert eine Ressource vom Typ aws_dynamodb_table mit dem Namen DriverDB
+  name           = "Drivers" # Legt den Namen der DynamoDB-Tabelle auf Drivers fest.
+  hash_key = "driverID" # Definiert driverID als den Hash-Schlüssel der Tabelle. Dies ist der primäre Schlüssel, der zum Speichern und Abrufen von Daten verwendet wird.
+  read_capacity = 20 # Legt die Lese-Kapazitätseinheiten der Tabelle auf 20 fest. Dies bestimmt, wie viele gleichzeitige Lesevorgänge pro Sekunde die Tabelle verarbeiten kann.
+  write_capacity = 20 # Legt die Schreib-Kapazitätseinheiten der Tabelle auf 20 fest. Dies bestimmt, wie viele gleichzeitige Schreibvorgänge pro Sekunde die Tabelle verarbeiten kann.
+
+
+  attribute { # Beginn des Attributblocks, der die Attribute für die Tabelle definiert.
+    name = "driverID" # Legt den Namen des Attributs auf driverID fest.
+    type = "S" # Legt den Typ des Attributs auf S fest, was für String steht.
+  } # Ende des Attributblocks
+} # Ende des Ressourcenblocks
+
+# Zusammengefasst erstellt dieses Skript eine AWS DynamoDB-Tabelle namens “Drivers” mit einem 
+# String-Attribut namens “driverID” als Hash-Schlüssel. Die Tabelle hat eine Lese- und Schreibkapazität von 20 Einheiten.
 
 ############################ SQS ############################
 
@@ -150,21 +167,24 @@ output "sqs_queue_url" {
 
 ###########################SNS##################################
 
+# Dieser Code ist ein Terraform-Skript, das eine AWS Simple Notification Service (SNS) 
+# Topic erstellt und ein E-Mail-Abonnement dafür konfiguriert.
+
 # Erstellen eines AWS SNS-Themas
-resource "aws_sns_topic" "example" {
-  name = "example-topic"  # Name des SNS-Themas
+resource "aws_sns_topic" "example" { # Dies definiert eine Ressource vom Typ aws_sns_topic mit dem Namen example.
+  name = "example-topic"  # Legt den Namen des SNS-Themas auf example-topic fest.
 }
 
 # Erstellen eines Abonnements für das SNS-Thema
-resource "aws_sns_topic_subscription" "email_subscription" {
+resource "aws_sns_topic_subscription" "email_subscription" { # Dies definiert eine Ressource vom Typ aws_sns_topic_subscription mit dem Namen email_subscription.
   topic_arn = aws_sns_topic.example.arn  # ARN des SNS-Themas
   protocol  = "email"  # Protokoll für das Abonnement (in diesem Fall E-Mail)
-  endpoint  = "thomas.kirsch@docc.techstarter.de"  # Endpunkt für das Abonnement (in diesem Fall eine E-Mail-Adresse)
+  endpoint  = "<emailadresse eingeben>"  # Endpunkt für das Abonnement (in diesem Fall eine E-Mail-Adresse)
 }
 
 # Ausgabe der ARN des SNS-Themas
-output "sns_topic_arn" {
-  value = aws_sns_topic.example.arn  # Wert der ARN des SNS-Themas
+output "sns_topic_arn" { # Definiert eine Ausgabe mit dem Namen sns_topic_arn.
+  value = aws_sns_topic.example.arn  # Setzt den Wert der Ausgabe auf den ARN des zuvor erstellten SNS-Themas.
 }
 
 # Dieser Terraform-Code erstellt ein Amazon Simple Notification Service (SNS) Thema und ein E-Mail-Abonnement für dieses Thema. 
@@ -173,31 +193,33 @@ output "sns_topic_arn" {
 
 ######################### auto zip ##############################
 
-data "archive_file" "lambda1_code" {
+# Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda*_code definiert.
+
+data "archive_file" "lambda1_code" { # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda1_code definiert.
   type        = "zip"
   source_file = "./python/orderlambda.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./python/orderlambda.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
 
-data "archive_file" "lambda2_code" {
+data "archive_file" "lambda2_code" { # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda2_code definiert.
   type        = "zip"
   source_file = "./getdriver/index.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./getdriver/index.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
 
-data "archive_file" "lambda3_code" {
+data "archive_file" "lambda3_code" { # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda3_code definiert.
   type        = "zip"
   source_file = "./driver/driver.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./driver/driver.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
 
-data "archive_file" "lambda4_code" {
+data "archive_file" "lambda4_code" { # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda4_code definiert.
   type        = "zip"
   source_file = "./python/request.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./python/request.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
 
-data "archive_file" "lambda5_code" {
+data "archive_file" "lambda5_code" { # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda5_code definiert.
   type        = "zip"
   source_file = "./python/sns.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./python/sns.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
