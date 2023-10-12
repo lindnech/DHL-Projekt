@@ -17,3 +17,7 @@ wenn alles passt ohne fehlermeldung dann weiter mit
 
 7. gehe auf Lambda: wähle die Orderlambda und öffne diese:
 8. unten im Register "Code" in Zeile 14 die sqs_queue_url einfügen und dann auf Deploy klicken um dann auf Testen.
+
+jetzt können wir in aws management console unter: DynamoDB,Elemente erkunden, Orders: sehen dass es nun einträge gibt.
+
+9. 
