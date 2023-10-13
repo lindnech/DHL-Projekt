@@ -2,9 +2,12 @@
 <html>
 <head>
     <title>DHL Paketversand</title>
+    <!-- Einbinden von Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Einbinden der eigenen CSS-Datei -->
     <link rel="stylesheet" type="text/css" href="order.css">
     <script>
+        // Funktion zur Generierung einer zufälligen Paket-ID
         function generatePacketId() {
             let packetId = '';
             let digits = '0123456789';
@@ -13,105 +16,129 @@
             }
             return packetId;
         }
+        // Funktion, die beim Laden der Seite aufgerufen wird
         window.onload = function() {
+            // Setzt das aktuelle Datum im Datumsfeld
             document.getElementById('date').value = new Date().toISOString().slice(0,10);
+            // Generiert eine zufällige Paket-ID und setzt sie im entsprechenden Feld
             document.getElementById('packetId').value = generatePacketId();
         };
     </script>
 </head>
 <body class="bg-light">
+    <!-- Container für das DHL-Logo -->
     <div class="image-container">
+        <!-- Das DHL-Logo -->
         <img id="dhl-logo" src=".\image\dhllogo.png" alt="DHL Logo">
     </div>
+    <!-- Horizontale Trennlinie -->
     <hr class="divider">
     <br>
 
+    <!-- Hauptcontainer für das Formular -->
     <div class="container">
+        <!-- Zeile, die das Formular zentriert -->
         <div class="row justify-content-center">
+            <!-- Spalte, die das Formular auf die Hälfte der Breite beschränkt -->
             <div class="col-6">
+                <!-- Überschrift des Formulars -->
                 <h1 class="text-center">DHL Paketversand</h1>
+                <!-- Das Formular selbst -->
                 <form id="packetForm">
+                    <!-- Gruppe für das Empfängername-Feld -->
                     <div class="form-group">
                         <label for="receiverName">Empfängername:</label>
                         <input type="text" id="receiverName" name="receiverName" class="form-control"><br>
 
+                        <!-- Gruppe für das Empfängeradresse-Feld -->
                         <label for="receiverAddress">Empfängeradresse:</label><br>
                         <input type="text" id="receiverAddress" name="receiverAddress" class="form-control"><br>
 
+                        <!-- Gruppe für das Empfängertelefonnummer-Feld -->
                         <label for="receiverPhone">Empfängertelefonnummer:</label><br>
                         <input type="tel" id="receiverPhone" name="receiverPhone" class="form-control"><br>
 
+                        <!-- Gruppe für das Absendername-Feld -->
                         <label for="senderName">Absendername:</label><br>
                         <input type="text" id="senderName" name="senderName" class="form-control"><br>
 
-                        <label for="senderAddress">Absenderadresse:</label><br>
-                        <input type="text" id="senderAddress" name="senderAddress" class="form-control"><br>
+                        <!-- Gruppe für das Absenderadresse-Feld -->
+                        <label for=="senderAddress">Absenderadresse:</label><br>
+                        <input type=="text"id=="senderAddress"name=="senderAddress"class=="form-control"><br>
 
-                        <label for="senderPhone">Absendertelefonnummer:</label><br>
-                        <input type="tel" id="senderPhone" name="senderPhone" class="form-control"><br>
+                        <!-- Gruppe für das Absendertelefonnummer-Feld -->
+                        <label for=="senderPhone">Absendertelefonnummer:</label><br>
+                        <input type=="tel"id=="senderPhone"name=="senderPhone"class=="form-control"><br>
 
-                        <!-- Paketdetails -->
-                        <label for="packetId">Paket-ID:</label><br>
-                        <input type="text" id="packetId" name="packetId" class="form-control" readonly><br>
+                        <!-- Gruppe für das Paket-ID-Feld -->
+                        <label for=="packetId">Paket-ID:</label><br>
+                        <input type=="text"id=="packetId"name=="packetId"class=="form-control"readonly><br>
 
-                        <label for="packageLength">Länge des Paketes:</label><br>
-                        <input type="number" id="packageLength" name="packageLength" class="form-control"><br>
+                        <!-- Gruppe für das Länge des Paketes-Feld -->
+                        <label for=="packageLength">Länge des Paketes:</label><br>
+                        <input type=="number"id=="packageLength"name=="packageLength"class=="form-control"><br>
 
-                        <label for="packageWidth">Breite des Paketes:</label><br>
-                        <input type="number" id="packageWidth" name="packageWidth" class="form-control"><br>
+                        <!-- Gruppe für das Breite des Paketes-Feld -->
+                        <label for=="packageWidth">Breite des Paketes:</label><br>
+                        <input type=="number"id=="packageWidth"name=="packageWidth"class=="form-control"><br>
 
-                        <label for="packageHeight">Höhe des Paketes:</label><br>
-                        <input type="number" id=="packageHeight" name=="packageHeight"class=="form-control"><br>
+                        <!-- Gruppe für das Höhe des Paketes-Feld -->
+                        <label for=="packageHeight">Höhe des Paketes:</label><br>
+                        <input type=="number"id=="packageHeight"name=="packageHeight"class=="form-control"><br>
+
+                        <!-- Gruppe für das Gewicht des Paketes-Feld -->
+                        <label for=="packageweight">Gewicht des Paketes:</label><br>
+                        <input type=="number"id=="packageweight"name=="packageweight"class=="form-control"><br>
+
+                        <!-- Gruppe für das Versicherungstyp-Feld -->
+<label for=="insuranceType">Versicherungstyp:</label><br>
+<input type="number" id=="insurance_value" name=="insurance_value"class=="form-control"><br>
 <br>
-                        <label for="packageweight">Gewicht des Paketes:</label><br>
-                        <input type="number" id=="packageweight" name=="packageweight"class=="form-control"><br>
-                        <br>
-                        <!-- Versicherungsdetails -->
-                        <label for=="insuranceType">Versicherungstyp:</label><br>
-                        <select id=="insuranceType"name=="insuranceType"class=="form-control">
-                            <option value="">Bitte auswählen...</option>
-                            <option value=="Basic">Basic</option>
-                            <option value=="Premium">Premium</option>
-                            <option value=="Gold">Gold</option>
-                        </select><br>
-                        <br>
-                        <label for="insurance_value">Versicherungswert:</label><br>
-                        <input type="number" id=="insurance_value" name=="insurance_value"class=="form-control"><br>
-                        <br>
-                        <!-- Versicherungsdetails -->
-                        <label for=="insurance_value">Einschränkungen:</label><br>
-                        <select id=="insurance_value"name=="insurance_value"class=="form-control">
-                            <option value="">Bitte auswählen...</option>
-                            <option value=="Sperrgut">Sperrgut</option>
-                            <option value=="Zerbrechlich">Zerbrechlich</option>
-                            <option value=="Liquid">Liquid</option>
-                            <option value=="Flammable">Flammable</option>
-                        </select><br>
-                        <br>
-                        <label for="date">Heutiges Datum:</label><br>
-                        <input type="date" id="date" name="date" class="form-control"><br>
+<!-- Gruppe für das Einschränkungen-Feld -->
+<label for=="insurance_value">Einschränkungen:</label><br>
+<select id=="insurance_value"name=="insurance_value"class=="form-control">
+    <option value="">Bitte auswählen...</option>
+    <option value=="Sperrgut">Sperrgut</option>
+    <option value=="Zerbrechlich">Zerbrechlich</option>
+    <option value=="Liquid">Liquid</option>
+    <option value=="Flammable">Flammable</option>
+</select><br>
+<br>
+<!-- Gruppe für das Heutiges Datum-Feld -->
+<label for="date">Heutiges Datum:</label><br>
+<input type="date" id="date" name="date" class="form-control"><br>
 
-                        <!-- Weitere Felder für die Paketdetails... -->
-                    </div>
-                    <a href="https://link zur api gateway">
-                    <button type="submit" class="btn btn-primary">Senden</button>
-                    </a>
-                    <br>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="image-container">
-        <img id="logistic-logo" src=".\image\Logistic.png" alt="Logistic Logo">
-    </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-    document.getElementById('packetForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        alert('Ihr Paket ist bereit für den Versand und ein Fahrer wird zugeteilt, um das Paket abzuholen. Behalten Sie den Sendestatus im Auge.');
-    });
-    </script>
+<!-- Weitere Felder für die Paketdetails... -->
+</div>
+<!-- Link zur API-Gateway -->
+<a href="https://link zur api gateway">
+<!-- Senden-Button -->
+<button type="submit" class="btn btn-primary">Senden</button>
+</a>
+<br>
+</form>
+</div>
+</div>
+</div>
+<!-- Container für das Logistik-Logo -->
+<div class="image-container">
+    <!-- Das Logistik-Logo -->
+    <img id="logistic-logo" src=".\image\Logistic.png" alt="Logistic Logo">
+</div>
+
+<!-- Einbinden von jQuery und Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+// Event-Listener für das Absenden des Formulars
+document.getElementById('packetForm').addEventListener('submit', function(event) {
+    // Verhindert das tatsächliche Absenden des Formulars
+    event.preventDefault();
+    // Zeigt eine Benachrichtigung an, dass das Paket versandbereit ist
+    alert('Ihr Paket ist bereit für den Versand und ein Fahrer wird zugeteilt, um das Paket abzuholen. Behalten Sie den Sendestatus im Auge.');
+});
+</script>
 
 </body>
 </html>

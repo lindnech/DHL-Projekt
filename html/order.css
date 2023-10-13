@@ -1,21 +1,24 @@
+
+/* Ein Container für Bilder mit Flexbox-Layout */
 .image-container{
-    display: flex;
-    justify-content: center;
+    display: flex; /* Aktiviert das Flexbox-Layout */
+    justify-content: center; /* Zentriert die Elemente horizontal im Container */
 }
 
+/* Stile für das DHL-Logo */
 #dhl-logo {
-    margin: 2%;
-    width: 55%;
-    height: 25%;
-    float: left;
+    margin: 2%; /* Setzt den Außenabstand auf 3% des Elternelements */
+    width: 55%; /* Setzt die Breite auf 55% des Elternelements */
+    height: 25%; /* Setzt die Höhe auf 25% des Elternelements */
+    float: left; /* Lässt das Element nach links schweben */
 }
-
+/* Stile für das Logistik-Logo */
 #logistic-logo {
-    margin: 5%;
-    width: 25%;
-    float: right;
+    margin: 5%;     /* Setzt den Außenabstand auf 5% des Elternelements */
+    width: 25%;     /* Setzt die Breite auf 25% des Elternelements */
+    float: right;   /* Lässt das Element nach rechts schweben */
 }
-
+/* Ein Trennzeichen mit einer grauen Linie oben */
 .divider {
-    border-top: 1px solid #ccc; /* Graue Trennlinie */
+    border-top: 1px solid #ccc; /* Setzt eine graue Trennlinie oben auf das Element */
 }
