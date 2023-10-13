@@ -349,7 +349,13 @@ resource "aws_lambda_function" "example" {
 # Erstellt eine API Gateway mit der Ressource "aws_apigatewayv2_api"
 resource "aws_apigatewayv2_api" "example" {
   name          = "API-Gateway-Input"  # Der Name der API Gateway
-  protocol_type = "HTTP"  # Der Protokolltyp der API Gateway
+  protocol_type = "HTTP" # Der Protokolltyp der API Gateway
+  cors_configuration {
+    allow_origins = ["http://*"]
+    allow_methods = ["POST", "GET", "DELETE", "*"]
+    allow_headers = ["content-type"]
+    max_age = 300
+  }
 }
 
 # Erstellt eine Route für die API Gateway mit der Ressource "aws_apigatewayv2_route"
@@ -379,6 +385,24 @@ resource "aws_apigatewayv2_stage" "example" {
 
 # Erstellung eines HTTP API-Gateway mit Lambda integration: in eu-central-1 Lamda-Funktion?...., Version 2.0 und API-Name: API-Gateway-Input, 
 # und einer Routen konfiguration: Methode: put?, Ressourcenpfad:?, Integrationsziel:? (Lambda für die API), Stufen konfiguration: Stufenname: $default,
+
+# Erstellt eine Berechtigung für die Lambda-Funktion
+resource "aws_lambda_permission" "apigw" {
+  # Eindeutige ID für die Berechtigungserklärung
+  statement_id  = "AllowExecutionFromAPIGateway"
+  
+  # Die Aktion, die die API Gateway auf die Lambda-Funktion ausführen darf
+  action        = "lambda:InvokeFunction"
+  
+  # Der Name der Lambda-Funktion, auf die sich die Berechtigung bezieht
+  function_name = aws_lambda_function.example.function_name
+  
+  # Der AWS-Service (in diesem Fall API Gateway), der die Berechtigung erhält
+  principal     = "apigateway.amazonaws.com"
+
+  # Die ARN der API Gateway, die die Berechtigung erhält, um die Lambda-Funktion auszulösen
+  source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*/*"
+}
 
 ######################### auto zip ##############################
 

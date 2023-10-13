@@ -63,45 +63,54 @@
                         <input type="text" id="senderName" name="senderName" class="form-control"><br>
 
                         <!-- Gruppe für das Absenderadresse-Feld -->
-                        <label for=="senderAddress">Absenderadresse:</label><br>
-                        <input type=="text"id=="senderAddress"name=="senderAddress"class=="form-control"><br>
+                        <label for="senderAddress">Absenderadresse:</label><br>
+                        <input type="text"id="senderAddress"name="senderAddress"class="form-control"><br>
 
                         <!-- Gruppe für das Absendertelefonnummer-Feld -->
-                        <label for=="senderPhone">Absendertelefonnummer:</label><br>
-                        <input type=="tel"id=="senderPhone"name=="senderPhone"class=="form-control"><br>
+                        <label for="senderPhone">Absendertelefonnummer:</label><br>
+                        <input type="tel"id="senderPhone"name="senderPhone"class="form-control"><br>
 
                         <!-- Gruppe für das Paket-ID-Feld -->
-                        <label for=="packetId">Paket-ID:</label><br>
-                        <input type=="text"id=="packetId"name=="packetId"class=="form-control"readonly><br>
+                        <label for="packetId">Paket-ID:</label><br>
+                        <input type="text"id="packetId"name="packetId"class="form-control"readonly><br>
 
                         <!-- Gruppe für das Länge des Paketes-Feld -->
-                        <label for=="packageLength">Länge des Paketes:</label><br>
-                        <input type=="number"id=="packageLength"name=="packageLength"class=="form-control"><br>
+                        <label for="packageLength">Länge des Paketes:</label><br>
+                        <input type="number"id="packageLength"name="packageLength"class="form-control"><br>
 
                         <!-- Gruppe für das Breite des Paketes-Feld -->
-                        <label for=="packageWidth">Breite des Paketes:</label><br>
-                        <input type=="number"id=="packageWidth"name=="packageWidth"class=="form-control"><br>
+                        <label for="packageWidth">Breite des Paketes:</label><br>
+                        <input type="number"id="packageWidth"name="packageWidth"class="form-control"><br>
 
                         <!-- Gruppe für das Höhe des Paketes-Feld -->
-                        <label for=="packageHeight">Höhe des Paketes:</label><br>
-                        <input type=="number"id=="packageHeight"name=="packageHeight"class=="form-control"><br>
+                        <label for="packageHeight">Höhe des Paketes:</label><br>
+                        <input type="number"id="packageHeight"name="packageHeight"class="form-control"><br>
 
                         <!-- Gruppe für das Gewicht des Paketes-Feld -->
-                        <label for=="packageweight">Gewicht des Paketes:</label><br>
-                        <input type=="number"id=="packageweight"name=="packageweight"class=="form-control"><br>
+                        <label for="packageweight">Gewicht des Paketes:</label><br>
+                        <input type="number"id="packageweight"name="packageweight"class="form-control"><br>
 
                         <!-- Gruppe für das Versicherungstyp-Feld -->
-<label for=="insuranceType">Versicherungstyp:</label><br>
-<input type="number" id=="insurance_value" name=="insurance_value"class=="form-control"><br>
-<br>
-<!-- Gruppe für das Einschränkungen-Feld -->
-<label for=="insurance_value">Einschränkungen:</label><br>
-<select id=="insurance_value"name=="insurance_value"class=="form-control">
+<label for="insurance_type">Versicherungstyp:</label><br>
+<select id="insurance_type" name="insurance_type"class="form-control"><br>
     <option value="">Bitte auswählen...</option>
-    <option value=="Sperrgut">Sperrgut</option>
-    <option value=="Zerbrechlich">Zerbrechlich</option>
-    <option value=="Liquid">Liquid</option>
-    <option value=="Flammable">Flammable</option>
+    <option value="Basic">Basic</option>
+    <option value="Premium">Premium</option>
+    <option value="Gold">Gold</option>
+</select>
+    <br>
+    <!-- Gruppe für das Gewicht des Paketes-Feld -->
+                        <label for="insurance_value">Versicherungswert:</label><br>
+                        <input type="text"id="insurance_value"name="insurance_value"class="form-control"><br>
+    <br>
+<!-- Gruppe für das Einschränkungen-Feld -->
+<label for="insurance_value">Einschränkungen:</label><br>
+<select id="insurance_value"name="insurance_value"class="form-control">
+    <option value="">Bitte auswählen...</option>
+    <option value="Sperrgut">Sperrgut</option>
+    <option value="Zerbrechlich">Zerbrechlich</option>
+    <option value="Liquid">Liquid</option>
+    <option value="Flammable">Flammable</option>
 </select><br>
 <br>
 <!-- Gruppe für das Heutiges Datum-Feld -->
@@ -111,7 +120,7 @@
 <!-- Weitere Felder für die Paketdetails... -->
 </div>
 <!-- Link zur API-Gateway -->
-<a href="https://link zur api gateway">
+<a href="https://ife9oy06qc.execute-api.eu-central-1.amazonaws.com/">
 <!-- Senden-Button -->
 <button type="submit" class="btn btn-primary">Senden</button>
 </a>
