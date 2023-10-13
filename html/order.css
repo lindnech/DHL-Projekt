@@ -1,0 +1,21 @@
+.image-container{
+    display: flex;
+    justify-content: center;
+}
+
+#dhl-logo {
+    margin: 2%;
+    width: 55%;
+    height: 25%;
+    float: left;
+}
+
+#logistic-logo {
+    margin: 5%;
+    width: 25%;
+    float: right;
+}
+
+.divider {
+    border-top: 1px solid #ccc; /* Graue Trennlinie */
+}

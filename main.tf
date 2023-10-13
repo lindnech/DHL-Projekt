@@ -333,6 +333,53 @@ output "sns_topic_arn" { # Definiert eine Ausgabe mit dem Namen sns_topic_arn.
 # Das Thema heißt “example-topic”. Das Abonnement sendet Benachrichtigungen an die E-Mail-Adresse “emailadresse einfügen”. 
 # Am Ende gibt der Code die Amazon Resource Number (ARN) des erstellten Themas aus.
 
+####################### HTTP API Gateway und die Lambda dafür ########################
+
+# Erstellt eine Lambda-Funktion mit der Ressource "aws_lambda_function"
+resource "aws_lambda_function" "example" {
+  function_name = "example_lambda"  # Der Name der Lambda-Funktion
+  handler       = "apilambda.lambda_handler"  # Der Handler der Lambda-Funktion
+  runtime       = "python3.9"  # Die Laufzeitumgebung für die Lambda-Funktion
+
+  filename = "./api/apilambda.zip"  # Der Pfad zur ZIP-Datei, die den Code der Lambda-Funktion enthält
+
+  role          = aws_iam_role.lambda_exec_role.arn  # Die IAM-Rolle, die der Lambda-Funktion zugewiesen wird
+}
+
+# Erstellt eine API Gateway mit der Ressource "aws_apigatewayv2_api"
+resource "aws_apigatewayv2_api" "example" {
+  name          = "API-Gateway-Input"  # Der Name der API Gateway
+  protocol_type = "HTTP"  # Der Protokolltyp der API Gateway
+}
+
+# Erstellt eine Route für die API Gateway mit der Ressource "aws_apigatewayv2_route"
+resource "aws_apigatewayv2_route" "example" {
+  api_id    = aws_apigatewayv2_api.example.id  # Die ID der API Gateway, zu der die Route gehört
+  route_key = "PUT /your_resource_path"  # Der Schlüssel der Route (Methode und Pfad)
+  target    = "integrations/${aws_apigatewayv2_integration.example.id}"  # Das Ziel der Route (in diesem Fall eine Integration)
+}
+
+# Erstellt eine Integration zwischen der API Gateway und der Lambda-Funktion mit der Ressource "aws_apigatewayv2_integration"
+resource "aws_apigatewayv2_integration" "example" {
+  api_id           = aws_apigatewayv2_api.example.id  # Die ID der API Gateway, zu der die Integration gehört
+  integration_type = "AWS_PROXY"  # Der Typ der Integration
+
+  connection_type      = "INTERNET"  # Der Verbindungstyp der Integration
+  description          = "Lambda integration"  # Die Beschreibung der Integration
+  integration_method   = "POST"  # Die Methode, die für die Integration verwendet wird
+  integration_uri      = aws_lambda_function.example.invoke_arn  # Die URI, die aufgerufen wird, wenn die Integration ausgelöst wird
+}
+
+# Erstellt eine Stufe für die API Gateway mit der Ressource "aws_apigatewayv2_stage"
+resource "aws_apigatewayv2_stage" "example" {
+  api_id      = aws_apigatewayv2_api.example.id  # Die ID der API Gateway, zu der die Stufe gehört
+  name        = "$default"  # Der Name der Stufe
+  auto_deploy = true  # Gibt an, ob Änderungen an dieser Stufe automatisch bereitgestellt werden sollen
+}
+
+# Erstellung eines HTTP API-Gateway mit Lambda integration: in eu-central-1 Lamda-Funktion?...., Version 2.0 und API-Name: API-Gateway-Input, 
+# und einer Routen konfiguration: Methode: put?, Ressourcenpfad:?, Integrationsziel:? (Lambda für die API), Stufen konfiguration: Stufenname: $default,
+
 ######################### auto zip ##############################
 
 # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda*_code definiert.
@@ -366,3 +413,10 @@ data "archive_file" "lambda5_code" { # Dieser Code ist ein Terraform-Skript, das
   source_file = "./python/sns.py"  # Pfad zum ZIP-Datei-Quelldatei
   output_path = "./python/sns.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
 }
+
+data "archive_file" "lambda6_code" { # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda6_code definiert.
+  type        = "zip"
+  source_file = "./api/apilambda.py"  # Pfad zum ZIP-Datei-Quelldatei
+  output_path = "./api/apilambda.zip" # Pfad, wohin das ZIP-Archiv extrahiert werden soll
+}
+#####################################################################
