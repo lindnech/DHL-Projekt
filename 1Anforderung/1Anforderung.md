@@ -20,7 +20,7 @@ Verarbeitung und Benachrichtigung von Nutzern über Paketzustellungsstatus bei D
     - Bei Zuweisung wird der Fahrer benachrichtigt.
 
 4. Aktualisierung des Lieferstatus
-    - 4Fahrer können den Lieferstatus (z. B. "In Transit", "Delivered") aktualisieren.
+    - Fahrer können den Lieferstatus (z. B. "In Transit", "Delivered") aktualisieren.
     - Statusänderungen lösen Stream-Ereignisse aus.
     - Eine Funktion wird durch Stream-Ereignisse ausgelöst.
 
