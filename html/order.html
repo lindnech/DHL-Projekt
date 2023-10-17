@@ -119,8 +119,8 @@
 
                         <!-- Weitere Felder für die Paketdetails... -->
                         </div>
-<!-- Link zur API-Gateway -->
-<a href="https://ife9oy06qc.execute-api.eu-central-1.amazonaws.com/">
+<!-- Link zur API-Gateway: Anpassen nach terraform apply von webconsole rauskopieren, unter: API-Gateway-Input den Endpointlink kopieren und einfügen.-->
+<a href="https://t3g9ctf8pb.execute-api.eu-central-1.amazonaws.com/orderlambda">
 <!-- Senden-Button -->
 <button type="submit" class="btn btn-primary">Senden</button>
 </a>
@@ -147,6 +147,46 @@ document.getElementById('packetForm').addEventListener('submit', function(event)
     // Zeigt eine Benachrichtigung an, dass das Paket versandbereit ist
     alert('Ihr Paket ist bereit für den Versand und ein Fahrer wird zugeteilt, um das Paket abzuholen. Behalten Sie den Sendestatus im Auge.');
 });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // Ihre vorhandenen Funktionen...
+
+    $(document).ready(function(){
+        $('#packetForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var formData = {
+                recipient_name: $('#receiverName').val(),
+                recipient_address: $('#receiverAddress').val(),
+                recipient_phone: $('#receiverPhone').val(),
+                sender_name: $('#senderName').val(),
+                sender_address: $('#senderAddress').val(),
+                sender_phone: $('#senderPhone').val(),
+                package_length: $('#packageLength').val(),
+                package_width: $('#packageWidth').val(),
+                package_height: $('#packageHeight').val(),
+                package_weight: $('#packageweight').val(),
+                insurance_type: $('#insurance_type').val(),
+                insurance_value: $('#insurance_value').val(),
+                restrictions: $('#restrictions').val(),
+                date: $('#date').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: 'https://t3g9ctf8pb.execute-api.eu-central-1.amazonaws.com/orderlambda',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function(data) {
+                    alert('Success!');
+                },
+                error: function(error) {
+                    alert('Error: ' + error);
+                }
+            });
+        });
+    });
 </script>
 
 </body>
