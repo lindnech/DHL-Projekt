@@ -25,6 +25,8 @@ resource "aws_lambda_function" "request_lambda" {
     variables = {
       # Die URL der SQS-Warteschlange, die als Umgebungsvariable bereitgestellt wird
       SQS_QUEUE_URL = aws_sqs_queue.order_queue.id
+      SNS_TOPIC_ARN = aws_sns_topic.example.arn
+    
     }
   }
 }
@@ -47,7 +49,7 @@ resource "aws_lambda_function" "sns" {
       # Die URL der SQS-Warteschlange, die als Umgebungsvariable bereitgestellt wird
       SQS_QUEUE_URL = aws_sqs_queue.order_queue.id
       # Das ARN des SNS-Themas, das als Umgebungsvariable bereitgestellt wird
-      SNS_TOPIC_ARN = aws_sns_topic.example.arn
+      SNS_TOPIC_ARN = aws_sns_topic.example.arn # das ARN des SNS-Themas, das als
     }
   }
 }
@@ -112,6 +114,7 @@ resource "aws_lambda_function" "orderput" {
     variables = {
       # Der Name der DynamoDB-Tabelle, die als Umgebungsvariable
       DYNAMODB_TABLE = aws_dynamodb_table.OrderDB.name  # Eine Umgebungsvariable, die den Namen der DynamoDB-Tabelle enthält
+      SQS_QUEUE_URL = aws_sqs_queue.order_queue.id  # Eine Umgebungsvariable, die die URL der SQS-Warteschlange enth】
     }
   }
 }
@@ -133,6 +136,7 @@ resource "aws_lambda_function" "driverput" {
     variables = {
       # Der Name der DynamoDB-Tabelle, die als Umgebungsvariable bereitgestellt wird
       DYNAMODB_TABLE = aws_dynamodb_table.OrderDB.name
+      EMAIL = var.email_address
     }
   }
 }

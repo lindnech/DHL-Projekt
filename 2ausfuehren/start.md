@@ -21,3 +21,6 @@ wenn alles passt ohne fehlermeldung dann weiter mit
 jetzt können wir in aws management console unter: DynamoDB,Elemente erkunden. In Orders: sehen dass es nun einträge gibt.
 
 9. .....weiteres folgt
+
+
+terraform apply -var-file="variables.tfvars"
