@@ -2,14 +2,13 @@ import boto3
 import time  
 from datetime import date  
 import json 
-import os
 
 dynamodb = boto3.resource('dynamodb')  
 table = dynamodb.Table('Orders')  
 
 sqs = boto3.client('sqs')  
 
-sqs_queue_url = os.environ["SQS_QUEUE_URL"]
+sqs_queue_url = 'aws_sqs_queue.order_queue.id'  
 
 def lambda_handler(event, context):
     try:
