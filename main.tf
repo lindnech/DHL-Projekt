@@ -408,6 +408,39 @@ resource "aws_lambda_permission" "apigw" {
   source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*/*"
 }
 
+# Definiert den Pfad der Lambda-funktion
+resource "aws_api_gateway_resource" "resource" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "orderlambda"  # Der Name Ihrer Lambda-Funktion
+}
+
+resource "aws_api_gateway_method" "method" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.resource.id
+  http_method   = "ANY"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "integration" {
+  rest_api_id             = aws_api_gateway_rest_api.api.id
+  resource_id             = aws_api_gateway_resource.resource.id
+  http_method            = aws_api_gateway_method.method.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.orderput.invoke_arn
+}
+
+resource "aws_api_gateway_deployment" "deployment" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = "default"
+}
+
+resource "aws_api_gateway_rest_api" "api" {
+  name        = "MeineAPI"
+  description = "Eine Beschreibung Ihrer API"
+}
+
 ######################### auto zip ##############################
 
 # Dieser Code ist ein Terraform-Skript, das eine Datenquelle vom Typ archive_file mit dem Namen lambda*_code definiert.

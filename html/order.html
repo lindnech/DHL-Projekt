@@ -43,6 +43,8 @@
             <div class="col-6">
                 <!-- Überschrift des Formulars -->
                 <h1 class="text-center">DHL Paketversand</h1>
+                <br>
+                <p>!! Bitte vollständig ausfüllen sonst kann ihre eingabe nicht verarbeitet werden. !!</p>
                 <!-- Das Formular selbst -->
                 <form id="packetForm">
                     <!-- Gruppe für das Empfängername-Feld -->
@@ -120,7 +122,7 @@
                         <!-- Weitere Felder für die Paketdetails... -->
                         </div>
 <!-- Link zur API-Gateway: Anpassen nach terraform apply von webconsole rauskopieren, unter: API-Gateway-Input den Endpointlink kopieren und einfügen.-->
-<a href="https://2yl1vtx8x9.execute-api.eu-central-1.amazonaws.com/orderlambda">
+<a href="https://xuups73m9k.execute-api.eu-central-1.amazonaws.com/orderlambda">
 <!-- Senden-Button -->
 <button type="submit" class="btn btn-primary">Senden</button>
 </a>
@@ -175,7 +177,7 @@ document.getElementById('packetForm').addEventListener('submit', function(event)
 
             $.ajax({
                 type: 'POST',
-                url: 'https://2yl1vtx8x9.execute-api.eu-central-1.amazonaws.com/orderlambda',
+                url: 'https://xuups73m9k.execute-api.eu-central-1.amazonaws.com/orderlambda',
                 data: JSON.stringify(formData),
                 contentType: 'application/json',
                 success: function(data) {

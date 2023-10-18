@@ -4,6 +4,7 @@ import string  # Importiert das string-Modul, das eine Sammlung von String-Konst
 import time  # Importiert das time-Modul, das Funktionen zur Handhabung von Zeit bietet.
 from datetime import date  # Importiert die date-Klasse aus dem datetime-Modul.
 import json # Importiert das json-Modul für die Codierung und Decodierung von JSON-Daten
+import os # Importiert das os-Modul für die Codierung und Decodierung von JSON-Daten
 
 # Initialisiert die DynamoDB-Ressource
 dynamodb = boto3.resource('dynamodb')  # Erstellt ein DynamoDB-Ressourcenobjekt mit boto3.
@@ -11,7 +12,7 @@ table = dynamodb.Table('Orders')  # Erstellt ein Tabellenobjekt für die angegeb
 
 sqs = boto3.client('sqs')  # Initialisiert den Amazon SQS-Client
 
-sqs_queue_url = 'aws_sqs_queue.order_queue.id'  # URL der Amazon SQS-Warteschlange
+sqs_queue_url = os.environ["SQS_QUEUE_URL"] # Erstellt die SQS-Warteschlange
 
 def random_string(length):
     """Erzeugt eine zufällige Zeichenkette fester Länge."""

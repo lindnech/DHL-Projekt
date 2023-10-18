@@ -2,13 +2,14 @@ import boto3
 import time  
 from datetime import date  
 import json 
+import os # # Importiert das os-Modul für die Codierung und Decodierung von JSON-Daten
 
 dynamodb = boto3.resource('dynamodb')  
 table = dynamodb.Table('Orders')  
 
 sqs = boto3.client('sqs')  
 
-sqs_queue_url = 'aws_sqs_queue.order_queue.id'  
+sqs_queue_url = os.environ["SQS_QUEUE_URL"] # Erstellt die SQS-Warteschlange 
 
 def lambda_handler(event, context):
     try:
